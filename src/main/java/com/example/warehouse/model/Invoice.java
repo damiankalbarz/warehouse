@@ -1,5 +1,6 @@
 package com.example.warehouse.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -16,9 +17,12 @@ public class Invoice {
     private Date saleDate;
     private String methodOfPayment;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    List<Product> productList = new ArrayList<>();
+    @Transient
+    private List<Product> productList = new ArrayList<>();
+
+
     @ManyToOne
+    @JoinColumn(name = "client_id", referencedColumnName = "id")
     private Client client;
 
 
