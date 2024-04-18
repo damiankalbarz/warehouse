@@ -1,6 +1,8 @@
 package com.example.warehouse.controller;
 
 import com.example.warehouse.model.Invoice;
+import com.example.warehouse.model.Product;
+import com.example.warehouse.model.ProductSold;
 import com.example.warehouse.service.InvoiceService;
 import com.example.warehouse.service.PdfService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +51,17 @@ public class InvoiceController {
     public ResponseEntity<Void> deleteInvoice(@PathVariable Long id) {
         invoiceService.deleteInvoiceById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @PostMapping("/addProduct/{id}")
+    public ResponseEntity<String> addProductToInvoice(@PathVariable("id") Long invoiceId, @RequestBody ProductSold product) {
+        try {
+            invoiceService.addProductToInvoice(invoiceId, product);
+            return ResponseEntity.ok("Product added to invoice successfully.");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to add product to invoice.");
+        }
     }
 
     @GetMapping("/pdf/{id}")

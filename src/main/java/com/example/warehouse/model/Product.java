@@ -15,8 +15,5 @@ public class Product {
     private long id;
     private String name;
     private double price;
-    @JsonIgnore
-    @ManyToMany(mappedBy = "productList")
-    @Transient
-    private List<Invoice> invoices;
+    private int quantity;
 }
