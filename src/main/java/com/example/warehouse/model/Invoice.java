@@ -2,6 +2,8 @@ package com.example.warehouse.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -14,7 +16,9 @@ public class Invoice {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @NotNull(message = "Data sprzedaży nie może być pusta")
     private Date saleDate;
+    @NotBlank(message = "Metoda płatności nie może być pusta")
     private String methodOfPayment;
     private double totalPrice;
 
