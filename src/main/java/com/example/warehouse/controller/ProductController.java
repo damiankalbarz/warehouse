@@ -13,12 +13,10 @@ import java.util.Optional;
 @RequestMapping("/products")
 public class ProductController {
 
-    private final ProductService productService;
-
     @Autowired
-    public ProductController(ProductService productService) {
-        this.productService = productService;
-    }
+    private ProductService productService;
+
+
 
     @GetMapping
     public ResponseEntity<List<Product>> getAllProducts() {

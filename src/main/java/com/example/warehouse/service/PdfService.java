@@ -8,6 +8,8 @@ import com.itextpdf.layout.Document;
 import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.properties.TextAlignment;
 import com.itextpdf.layout.properties.UnitValue;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import java.io.ByteArrayOutputStream;
 import java.util.Optional;
@@ -17,8 +19,15 @@ import com.itextpdf.layout.element.Table;
 @Service
 public class PdfService {
 
+
+    @Autowired
+    private KafkaTemplate<String, byte[]> kafkaTemplate;
+
+
     public byte[] generateInvoicePdf(Invoice invoice) throws Exception {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+
+        
 
 
         PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outputStream));
@@ -49,6 +58,8 @@ public class PdfService {
         table.setWidth(UnitValue.createPercentValue(100));
         table.addCell("Produkt");
         table.addCell("Ilosc");
+        table.addCell("Cena");
+
         for (ProductSold productSold : invoice.getProductSoldList()) {
             table.addCell(productSold.getProductId().toString());
             table.addCell(Integer.toString(productSold.getQuantity()));
@@ -57,6 +68,8 @@ public class PdfService {
 
         document.close();
         pdfDoc.close();
+
+        kafkaTemplate.send("invoice", String.valueOf(invoice.getId()), outputStream.toByteArray());
 
         return outputStream.toByteArray();
     }
